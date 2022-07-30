@@ -2,25 +2,21 @@
 #include <stdio.h>
 
 /*
- *	Author: Cody Botte
- *	Goal: A bubblesort implementation in c.
+ * My attempt at a c-language bubble sort.
  */
 
-//TODO: This program does not work. It has been gutted in preperation for my linkedlist.h library.
-
-//TODO: Abstract clear_keyboard_buffer && ITEM to {name}-lib
-
 //Prototypes
-void clear_keyboard_buffer(void);
-int bubble_sort(int* arr, int size);
+int getArr(int** arr);
+void copyArr(int* old, int* new, int size);
+void printArr(int* arr, int size);
+void clearKeyboardBuffer(void);
+void swapValues(int* arr, int one, int two);
+int bubbleSort(int* arr, int size);
 
 int main(int argc, const char* argv[]) {
 	//Predeclarations
-	VECTOR hVector;
-
+	int* arr = NULL;
 	int size, totalChanges;
-
-	
 
 	size = getArr(&arr);
 
@@ -35,13 +31,50 @@ int main(int argc, const char* argv[]) {
 	return 0;
 }
 
-void clear_keyboard_buffer(void) {
+int getArr(int** arr_p) {
+	int* arr;
+	int* tmp;
+	int size, val;
+	for (size = 1; scanf(" %d", &val) == 1; size++, clearKeyboardBuffer()) {
+		tmp = (int*)malloc(sizeof(int) * size);
+		arr = *arr_p;
+		copyArr(arr, tmp, size);
+		tmp[size-1] = val;
+		free(arr);
+		*arr_p = tmp;
+	} 
+	return size-1;
+}
+
+void copyArr(int* old, int* new, int size) {
+	if (size == 1) return;
+	for (int i = 0; i < size; i++) {
+		new[i] = old[i];
+	}
+}
+
+void printArr(int* arr, int size) {
+	printf("[ ");
+	for (int i = 0; i < size; i++) {
+		printf("%d ", arr[i]);
+	}
+	printf("]\n");
+}
+
+void clearKeyboardBuffer(void) {
 	int c;
 	while((c = getchar()) != '\n' && c != EOF);
 }
 
+void swapValues(int* arr, int one, int two) {
+	int tmp;
+	tmp = arr[one];
+	arr[one] = arr[two];
+	arr[two] = tmp;
+}
+
 //Returns number of changes needed.
-int bubble_sort(VECTOR hVector, int size) {
+int bubbleSort(int* arr, int size) {
 	int changesMade = 0, totalChanges = 0;
 	do {
 		changesMade = 0;
